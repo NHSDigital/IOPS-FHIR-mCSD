@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.fhirfacade.util;
+package uk.nhs.nhsdigital.mcsd.util;
 
 import java.math.BigInteger;
 import java.util.UUID;

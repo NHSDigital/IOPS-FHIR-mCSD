@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.fhirfacade.configuration
+package uk.nhs.nhsdigital.mcsd.configuration
 
 import ca.uhn.fhir.context.ConfigurationException
 import com.google.common.annotations.VisibleForTesting

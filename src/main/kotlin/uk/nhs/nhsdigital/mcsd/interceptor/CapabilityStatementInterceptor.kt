@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.fhirfacade.interceptor
+package uk.nhs.nhsdigital.mcsd.interceptor
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.interceptor.api.Hook
@@ -6,7 +6,7 @@ import ca.uhn.fhir.interceptor.api.Interceptor
 import ca.uhn.fhir.interceptor.api.Pointcut
 import org.hl7.fhir.instance.model.api.IBaseConformance
 import org.hl7.fhir.r4.model.*
-import uk.nhs.nhsdigital.fhirfacade.configuration.FHIRServerProperties
+import uk.nhs.nhsdigital.mcsd.configuration.FHIRServerProperties
 
 @Interceptor
 class CapabilityStatementInterceptor(

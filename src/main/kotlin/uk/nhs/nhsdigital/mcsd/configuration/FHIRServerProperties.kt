@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.fhirfacade.configuration
+package uk.nhs.nhsdigital.mcsd.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

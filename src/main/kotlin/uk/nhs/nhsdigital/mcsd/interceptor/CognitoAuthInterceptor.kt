@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.fhirfacade.interceptor
+package uk.nhs.nhsdigital.mcsd.interceptor
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.rest.client.api.IClientInterceptor
@@ -16,8 +16,8 @@ import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.springframework.stereotype.Component
-import uk.nhs.nhsdigital.fhirfacade.configuration.MessageProperties
-import uk.nhs.nhsdigital.fhirfacade.model.ResponseObject
+import uk.nhs.nhsdigital.mcsd.configuration.MessageProperties
+import uk.nhs.nhsdigital.mcsd.model.ResponseObject
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.IOException

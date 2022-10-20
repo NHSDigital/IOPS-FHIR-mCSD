@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.fhirfacade.configuration
+package uk.nhs.nhsdigital.mcsd.configuration
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.parser.StrictErrorHandler
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
-import uk.nhs.nhsdigital.fhirfacade.interceptor.CognitoAuthInterceptor
+import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
 
 @Configuration
 open class ApplicationConfiguration {
