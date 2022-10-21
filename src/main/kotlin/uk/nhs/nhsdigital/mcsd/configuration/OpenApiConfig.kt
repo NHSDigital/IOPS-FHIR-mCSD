@@ -581,7 +581,7 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
         careTeamItem
             .post(
                 Operation()
-                    .addTagsItem(DCTM + " - Update Care Team")
+                    .addTagsItem(DCTM + " - Update Patient Care Team")
                     .summary("[PCC-45]")
                     .description("This transaction is used to update or to create a CareTeam resource. A CareTeam resource is " +
                             "submitted to a Care Team Service where the update or creation is handled.")
