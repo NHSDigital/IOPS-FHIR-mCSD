@@ -1,6 +1,7 @@
 package uk.nhs.nhsdigital.mcsd.interceptor
 
 import ca.uhn.fhir.context.FhirContext
+import ca.uhn.fhir.rest.api.MethodOutcome
 import ca.uhn.fhir.rest.client.api.IClientInterceptor
 import ca.uhn.fhir.rest.client.api.IHttpRequest
 import ca.uhn.fhir.rest.client.api.IHttpResponse
@@ -12,8 +13,8 @@ import com.amazonaws.services.cognitoidp.model.AuthenticationResultType
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult
 import org.apache.commons.io.IOUtils
+import org.hl7.fhir.dstu3.model.OperationOutcome
 import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.springframework.stereotype.Component
 import uk.nhs.nhsdigital.mcsd.configuration.MessageProperties
@@ -25,6 +26,8 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+import javax.servlet.http.HttpServletRequest
+
 
 @Component
 class CognitoAuthInterceptor(val messageProperties: MessageProperties, val ctx : FhirContext) : IClientInterceptor {
@@ -108,6 +111,59 @@ class CognitoAuthInterceptor(val messageProperties: MessageProperties, val ctx :
             }
         } catch (ex: FileNotFoundException) {
             null
+        } catch (ex: IOException) {
+            throw UnprocessableEntityException(ex.message)
+        }
+    }
+
+    @Throws(Exception::class)
+    fun updatePost(httpRequest : HttpServletRequest, resource : Resource): MethodOutcome {
+
+        val method = MethodOutcome()
+        method.created = true
+        val opOutcome = OperationOutcome()
+
+        method.operationOutcome = opOutcome
+
+        val url = messageProperties.getCdrFhirServer()
+        var myUrl: URL? = null
+        val queryParams = httpRequest.queryString
+        val path = httpRequest.pathInfo
+        myUrl = if (queryParams != null) {
+            URL("$url$path?$queryParams")
+        } else {
+            URL(url + path)
+        }
+        val conn = myUrl.openConnection() as HttpURLConnection
+        getAccessToken()
+        val basicAuth = "Bearer "+authenticationResult!!.idToken
+        conn.setRequestProperty("Authorization", basicAuth)
+        conn.setRequestProperty("x-api-key",messageProperties.getAwsApiKey())
+        conn.setRequestProperty("Content-Type", "application/fhir+json")
+        conn.setRequestProperty("Accept", "application/fhir+json")
+        conn.requestMethod = httpRequest.method
+        conn.setDoOutput(true)
+        val jsonInputString = ctx.newJsonParser().encodeResourceToString(resource)
+        return try {
+            conn.getOutputStream().use { os ->
+                val input = jsonInputString.toByteArray(charset("utf-8"))
+                os.write(input, 0, input.size)
+            }
+            //conn.connect()
+            val `is` = InputStreamReader(conn.inputStream)
+            try {
+                val rd = BufferedReader(`is`)
+                val resource = ctx.newJsonParser().parseResource(IOUtils.toString(rd)) as Resource
+                if (resource != null && resource is Resource) {
+                    method.resource = resource
+                }
+                method
+            } finally {
+                `is`.close()
+            }
+        } catch (ex: FileNotFoundException) {
+            method.created = false
+            method
         } catch (ex: IOException) {
             throw UnprocessableEntityException(ex.message)
         }
