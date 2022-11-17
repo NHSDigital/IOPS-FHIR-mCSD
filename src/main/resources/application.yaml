@@ -14,9 +14,9 @@ management:
 
 fhir:
   server:
-    name: FHIR Care Services Directory and Care Teams Management
+    name: Care Services Directory and Care Teams Management
     baseUrl: http://lb-fhir-mcsd-1736981144.eu-west-2.elb.amazonaws.com
-    version: 1.0.4
+    version: 1.0.6
 
 ###Remote terminology validation:
 
