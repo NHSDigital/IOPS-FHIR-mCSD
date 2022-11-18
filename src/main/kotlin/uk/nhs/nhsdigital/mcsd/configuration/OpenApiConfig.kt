@@ -17,6 +17,7 @@ import io.swagger.v3.oas.models.parameters.Parameter
 import io.swagger.v3.oas.models.parameters.RequestBody
 import io.swagger.v3.oas.models.responses.ApiResponse
 import io.swagger.v3.oas.models.responses.ApiResponses
+import io.swagger.v3.oas.models.servers.Server
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,7 +27,7 @@ import uk.nhs.nhsdigital.mcsd.util.FHIRExamples
 @Configuration
 open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
     var MCSD = "Care Services Directory"
-    var DCTM = "Care Team Management"
+  //  var DCTM = "Care Team Management"
 
 
     @Bean
@@ -41,11 +42,12 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
                     .title(fhirServerProperties.server.name)
                     .version(fhirServerProperties.server.version)
                     .description(
+                        /*
                         "\n\n For Patient Demographics and Cinical Data queries, see **Patient Demographics Query** section of [Query for Existing Patient Data](http://lb-fhir-facade-926707562.eu-west-2.elb.amazonaws.com/)"
                         + "\n\n For Patient Document Queries and Document Notifications, see [Access to Health Documents](http://lb-fhir-mhd-1617422145.eu-west-2.elb.amazonaws.com/)."
                         + "\n\n To add patient data and FHIR Subscription interactions, see [Events and Subscriptions](http://lb-hl7-tie-1794188809.eu-west-2.elb.amazonaws.com/)"
-
-                        + "\n\n ## FHIR Implementation Guides"
+*/
+                        "## FHIR Implementation Guides"
                         + "\n\n [UK Core Implementation Guide (0.5.1)](https://simplifier.net/guide/ukcoreimplementationguide0.5.0-stu1/home?version=current)"
                         + "\n\n [NHS Digital Implementation Guide (2.6.0)](https://simplifier.net/guide/nhsdigital?version=2.6.0)"
 
@@ -53,7 +55,9 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
                     .termsOfService("http://swagger.io/terms/")
                     .license(License().name("Apache 2.0").url("http://springdoc.org"))
             )
-
+        oas.addServersItem(
+            Server().description(fhirServerProperties.server.name).url(fhirServerProperties.server.baseUrl)
+        )
 
         // CSD
 
@@ -65,7 +69,7 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
         )
 
         // Dynamic Care Team Management
-
+/*
         oas.addTagsItem(
             io.swagger.v3.oas.models.tags.Tag()
                 .name(DCTM + " - Update Patient Care Team")
@@ -84,7 +88,7 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
                 .description("[HL7 FHIR Administration Module](https://www.hl7.org/fhir/R4/administration-module.html) \n"
                         + " [IHE DCTM PCC-47](https://www.ihe.net/uploadedFiles/Documents/PCC/IHE_PCC_Suppl_DCTM.pdf)")
         )
-
+*/
         // Endpoint
         var endpointItem = PathItem()
             .get(
@@ -490,6 +494,7 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
             )
         oas.path("/FHIR/R4/PractitionerRole",practitionerRoleItem)
 
+        /*
         /// Care Teams
 
 
@@ -599,7 +604,7 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
                     )))
 
         oas.path("/FHIR/R4/CareTeam",careTeamItem)
-
+*/
 
         return oas
     }
