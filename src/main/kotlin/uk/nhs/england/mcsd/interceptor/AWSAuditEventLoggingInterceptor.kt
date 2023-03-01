@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.interceptor
+package uk.nhs.england.mcsd.interceptor
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.interceptor.api.Hook
@@ -13,8 +13,8 @@ import org.apache.commons.lang3.StringUtils
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.*
 import org.slf4j.LoggerFactory
-import uk.nhs.nhsdigital.mcsd.configuration.FHIRServerProperties
-import uk.nhs.nhsdigital.mcsd.util.FhirSystems
+import uk.nhs.england.mcsd.configuration.FHIRServerProperties
+import uk.nhs.england.mcsd.util.FhirSystems
 import java.io.IOException
 import java.util.*
 import javax.servlet.ServletException
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse
 @Interceptor
 class AWSAuditEventLoggingInterceptor(
     private val ctx: FhirContext,
-    private val fhirServerProperties: FHIRServerProperties
+    private val fhirServerProperties: uk.nhs.england.mcsd.configuration.FHIRServerProperties
 )
  {
 
@@ -156,12 +156,12 @@ class AWSAuditEventLoggingInterceptor(
         if (httpRequest.queryString != null) path += "?" + httpRequest.queryString
         entityComponent.addDetail().setType("query").value = StringType(path)
         if (httpRequest.method == "GET") {
-            auditEvent.type = Coding().setSystem(FhirSystems.ISO_EHR_EVENTS).setCode("access")
+            auditEvent.type = Coding().setSystem(uk.nhs.england.mcsd.util.FhirSystems.ISO_EHR_EVENTS).setCode("access")
         } else {
-            auditEvent.type = Coding().setSystem(FhirSystems.ISO_EHR_EVENTS).setCode("transmit")
+            auditEvent.type = Coding().setSystem(uk.nhs.england.mcsd.util.FhirSystems.ISO_EHR_EVENTS).setCode("transmit")
            // DISABLED 3/Oct/2022 Don't put resources in audit  entityComponent.addDetail().setType("resource").value = StringType(resource)
         }
-        entityComponent.type = Coding().setSystem(FhirSystems.FHIR_RESOURCE_TYPE).setCode(fhirResourceName)
+        entityComponent.type = Coding().setSystem(uk.nhs.england.mcsd.util.FhirSystems.FHIR_RESOURCE_TYPE).setCode(fhirResourceName)
 
 
         // Source
@@ -178,20 +178,20 @@ class AWSAuditEventLoggingInterceptor(
         // Agent Application
         val agentComponent = auditEvent.addAgent()
         agentComponent.requestor = true
-        agentComponent.type = CodeableConcept(Coding().setSystem(FhirSystems.DICOM_AUDIT_ROLES).setCode("110150"))
+        agentComponent.type = CodeableConcept(Coding().setSystem(uk.nhs.england.mcsd.util.FhirSystems.DICOM_AUDIT_ROLES).setCode("110150"))
 
         /// Agent Patient about
         if (patientId != null) {
             val patient = auditEvent.addAgent()
             patient.requestor = false
             patient.type =
-                CodeableConcept(Coding().setSystem(FhirSystems.V3_ROLE_CLASS).setCode("PAT"))
+                CodeableConcept(Coding().setSystem(uk.nhs.england.mcsd.util.FhirSystems.V3_ROLE_CLASS).setCode("PAT"))
             if (patientId.startsWith("Patient/")) {
                 patient.who = Reference().setReference(patientId).setType("Patient")
             } else {
                 patient.who =
                     Reference().setType("Patient")
-                        .setIdentifier(Identifier().setSystem(FhirSystems.EMIS_PATIENT_IDENTIFIER).setValue(patientId))
+                        .setIdentifier(Identifier().setSystem(uk.nhs.england.mcsd.util.FhirSystems.EMIS_PATIENT_IDENTIFIER).setValue(patientId))
             }
         }
         var ipAddress = httpRequest.getHeader("X-FORWARDED-FOR")

@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.model
+package uk.nhs.england.mcsd.model
 
 class ResponseObject {
     var response: String? = null

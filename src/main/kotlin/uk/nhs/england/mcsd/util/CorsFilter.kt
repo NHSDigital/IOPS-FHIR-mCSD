@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.util
+package uk.nhs.england.mcsd.util
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

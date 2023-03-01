@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.util;
+package uk.nhs.england.mcsd.util;
 
 import java.math.BigInteger;
 import java.util.UUID;

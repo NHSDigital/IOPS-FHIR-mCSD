@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.configuration
+package uk.nhs.england.mcsd.configuration
 
 
 import ca.uhn.fhir.context.FhirContext
@@ -21,7 +21,7 @@ import io.swagger.v3.oas.models.servers.Server
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import uk.nhs.nhsdigital.mcsd.util.FHIRExamples
+import uk.nhs.england.mcsd.util.FHIRExamples
 
 
 @Configuration
@@ -32,7 +32,7 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
 
     @Bean
     open fun customOpenAPI(
-        fhirServerProperties: FHIRServerProperties
+        fhirServerProperties: uk.nhs.england.mcsd.configuration.FHIRServerProperties
        // restfulServer: FHIRR4RestfulServer
     ): OpenAPI? {
 

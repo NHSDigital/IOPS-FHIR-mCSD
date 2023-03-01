@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.configuration
+package uk.nhs.england.mcsd.configuration
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

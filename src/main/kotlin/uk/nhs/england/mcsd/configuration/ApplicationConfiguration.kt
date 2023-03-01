@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.configuration
+package uk.nhs.england.mcsd.configuration
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.parser.StrictErrorHandler
@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
-import uk.nhs.nhsdigital.mcsd.util.CorsFilter
+import uk.nhs.england.mcsd.interceptor.CognitoAuthInterceptor
+import uk.nhs.england.mcsd.util.CorsFilter
 import javax.servlet.Filter
 
 @Configuration
@@ -31,7 +31,7 @@ open class ApplicationConfiguration {
 
 
     @Bean
-    fun getAWSclient(cognitoIdpInterceptor: CognitoAuthInterceptor?, mmessageProperties: MessageProperties, @Qualifier("R4") ctx : FhirContext): IGenericClient? {
+    fun getAWSclient(cognitoIdpInterceptor: CognitoAuthInterceptor?, mmessageProperties: uk.nhs.england.mcsd.configuration.MessageProperties, @Qualifier("R4") ctx : FhirContext): IGenericClient? {
         val client: IGenericClient = ctx.newRestfulGenericClient(mmessageProperties.getCdrFhirServer())
         client.registerInterceptor(cognitoIdpInterceptor)
         return client

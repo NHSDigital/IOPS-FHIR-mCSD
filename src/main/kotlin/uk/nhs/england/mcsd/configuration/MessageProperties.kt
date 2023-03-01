@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.configuration
+package uk.nhs.england.mcsd.configuration
 
 import ca.uhn.fhir.context.ConfigurationException
 import com.google.common.annotations.VisibleForTesting
@@ -9,7 +9,7 @@ import java.util.*
 
 @Configuration
 class MessageProperties {
-    private val log = LoggerFactory.getLogger(MessageProperties::class.java)
+    private val log = LoggerFactory.getLogger(uk.nhs.england.mcsd.configuration.MessageProperties::class.java)
 
 
     val HAPI_PROPERTIES = "message.properties"
@@ -56,7 +56,7 @@ class MessageProperties {
         if (properties == null) {
             // Load the configurable properties file
             try {
-                MessageProperties::class.java.classLoader.getResourceAsStream(HAPI_PROPERTIES).use { `in` ->
+                uk.nhs.england.mcsd.configuration.MessageProperties::class.java.classLoader.getResourceAsStream(HAPI_PROPERTIES).use { `in` ->
                     properties = Properties()
                     properties!!.load(`in`)
                 }
@@ -160,7 +160,7 @@ class MessageProperties {
         // Load the configurable properties file
         var properties: Properties
         try {
-            MessageProperties::class.java.classLoader.getResourceAsStream(HAPI_PROPERTIES).use { `in` ->
+            uk.nhs.england.mcsd.configuration.MessageProperties::class.java.classLoader.getResourceAsStream(HAPI_PROPERTIES).use { `in` ->
                 properties = Properties()
                 properties.load(`in`)
             }

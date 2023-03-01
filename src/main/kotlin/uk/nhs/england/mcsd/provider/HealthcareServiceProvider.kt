@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.provider
+package uk.nhs.england.mcsd.provider
 
 import ca.uhn.fhir.rest.annotation.IdParam
 import ca.uhn.fhir.rest.annotation.OptionalParam
@@ -9,7 +9,7 @@ import ca.uhn.fhir.rest.param.TokenParam
 import ca.uhn.fhir.rest.server.IResourceProvider
 import org.hl7.fhir.r4.model.*
 import org.springframework.stereotype.Component
-import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
+import uk.nhs.england.mcsd.interceptor.CognitoAuthInterceptor
 import javax.servlet.http.HttpServletRequest
 
 @Component

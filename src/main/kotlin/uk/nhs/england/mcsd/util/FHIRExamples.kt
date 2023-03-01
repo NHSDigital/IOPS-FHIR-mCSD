@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.util
+package uk.nhs.england.mcsd.util
 
 import ca.uhn.fhir.context.FhirContext
 import com.fasterxml.jackson.core.JsonFactory

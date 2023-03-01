@@ -1,4 +1,4 @@
-package uk.nhs.nhsdigital.mcsd.interceptor
+package uk.nhs.england.mcsd.interceptor
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.rest.api.MethodOutcome
@@ -18,9 +18,9 @@ import org.hl7.fhir.dstu3.model.OperationOutcome
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
 import org.springframework.stereotype.Component
-import uk.nhs.nhsdigital.mcsd.configuration.FHIRServerProperties
-import uk.nhs.nhsdigital.mcsd.configuration.MessageProperties
-import uk.nhs.nhsdigital.mcsd.model.ResponseObject
+import uk.nhs.england.mcsd.configuration.FHIRServerProperties
+import uk.nhs.england.mcsd.configuration.MessageProperties
+import uk.nhs.england.mcsd.model.ResponseObject
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletRequest
 
 
 @Component
-class CognitoAuthInterceptor(val messageProperties: MessageProperties,
-                             val fhirServerProperties: FHIRServerProperties,
+class CognitoAuthInterceptor(val messageProperties: uk.nhs.england.mcsd.configuration.MessageProperties,
+                             val fhirServerProperties: uk.nhs.england.mcsd.configuration.FHIRServerProperties,
                              val ctx : FhirContext) : IClientInterceptor {
 
     var authenticationResult: AuthenticationResultType? = null
