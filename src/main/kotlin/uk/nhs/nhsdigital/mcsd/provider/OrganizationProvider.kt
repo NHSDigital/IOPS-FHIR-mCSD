@@ -15,33 +15,28 @@ import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class OrganizationProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor) : IResourceProvider {
-    override fun getResourceType(): Class<Organization> {
-        return Organization::class.java
-    }
+class OrganizationProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor)  {
 
-    @Read
+
+    @Read(type=Organization::class)
     fun read(httpRequest : HttpServletRequest, @IdParam internalId: IdType): Organization? {
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null)
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null,"Organization")
         return if (resource is Organization) resource else null
     }
 
-    @Search
+    @Search(type=Organization::class)
     fun search(
         httpRequest : HttpServletRequest,
         @OptionalParam(name = Organization.SP_NAME) name : StringParam?,
         @OptionalParam(name = Organization.SP_ADDRESS_POSTALCODE) postcode : StringParam?,
         @OptionalParam(name = Organization.SP_IDENTIFIER)  identifier :TokenParam?,
         @OptionalParam(name = Organization.SP_RES_ID)  resid : StringParam?
-    ): List<Organization> {
+    ): Bundle? {
         val organisations = mutableListOf<Organization>()
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString)
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString,"Organization")
         if (resource != null && resource is Bundle) {
-            for (entry in resource.entry) {
-                if (entry.hasResource() && entry.resource is Organization) organisations.add(entry.resource as Organization)
-            }
+            return resource
         }
-
-        return organisations
+        return null
     }
 }

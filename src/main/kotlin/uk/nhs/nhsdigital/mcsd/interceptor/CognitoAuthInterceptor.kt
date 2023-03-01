@@ -5,6 +5,7 @@ import ca.uhn.fhir.rest.api.MethodOutcome
 import ca.uhn.fhir.rest.client.api.IClientInterceptor
 import ca.uhn.fhir.rest.client.api.IHttpRequest
 import ca.uhn.fhir.rest.client.api.IHttpResponse
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder
@@ -17,6 +18,7 @@ import org.hl7.fhir.dstu3.model.OperationOutcome
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
 import org.springframework.stereotype.Component
+import uk.nhs.nhsdigital.mcsd.configuration.FHIRServerProperties
 import uk.nhs.nhsdigital.mcsd.configuration.MessageProperties
 import uk.nhs.nhsdigital.mcsd.model.ResponseObject
 import java.io.BufferedReader
@@ -30,7 +32,9 @@ import javax.servlet.http.HttpServletRequest
 
 
 @Component
-class CognitoAuthInterceptor(val messageProperties: MessageProperties, val ctx : FhirContext) : IClientInterceptor {
+class CognitoAuthInterceptor(val messageProperties: MessageProperties,
+                             val fhirServerProperties: FHIRServerProperties,
+                             val ctx : FhirContext) : IClientInterceptor {
 
     var authenticationResult: AuthenticationResultType? = null
 
@@ -74,7 +78,7 @@ class CognitoAuthInterceptor(val messageProperties: MessageProperties, val ctx :
     }
 
     @Throws(Exception::class)
-    fun readFromUrl(path: String, queryParams: String?): Resource? {
+    fun readFromUrl(path: String, queryParams: String?, resourceName: String?): Resource? {
         val responseObject = ResponseObject()
         val url = messageProperties.getCdrFhirServer()
         var myUrl: URL? = null
@@ -102,10 +106,17 @@ class CognitoAuthInterceptor(val messageProperties: MessageProperties, val ctx :
                     val resource = ctx.newJsonParser().parseResource(IOUtils.toString(rd)) as Resource
 
                     if (resource is Bundle) {
-                        val bundle = resource
-                        if (bundle.hasEntry()) {
-                            for (entryComponent in bundle.entry) {
-
+                        for (entry in resource.entry) {
+                            entry.fullUrl = fhirServerProperties.server.baseUrl + "/FHIR/R4/"+entry.resource.javaClass.simpleName + "/"+entry.resource.idElement.idPart
+                        }
+                        for (link in resource.link) {
+                            if (link.hasUrl() && resourceName!=null) {
+                                val str= link.url.split(resourceName)
+                                if (str.size>1) {
+                                    link.url = fhirServerProperties.server.baseUrl + "/FHIR/R4/" + resourceName + str[1]
+                                } else {
+                                    link.url = fhirServerProperties.server.baseUrl + "/FHIR/R4/" + resourceName
+                                }
                             }
                         }
                     }
@@ -114,15 +125,17 @@ class CognitoAuthInterceptor(val messageProperties: MessageProperties, val ctx :
                     `is`.close()
                 }
             } catch (ex: FileNotFoundException) {
-                null
-            } catch (ex: IOException) {
+                retry--
+                throw ResourceNotFoundException(ex.message)
+            } catch (ex: Exception) {
                 retry--
                 if (ex.message != null) {
                     if (ex.message!!.contains("401") || ex.message!!.contains("403")) {
-                        this.authenticationResult = null
-                        if (retry < 1) throw UnprocessableEntityException(ex.message)
-                    }
 
+                        this.authenticationResult = null
+                        if (retry < 1)
+                            throw UnprocessableEntityException(ex.message)
+                    }
                 } else {
                     throw UnprocessableEntityException(ex.message)
                 }

@@ -15,18 +15,15 @@ import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class LocationProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor) : IResourceProvider {
-    override fun getResourceType(): Class<Location> {
-        return Location::class.java
-    }
+class LocationProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor)  {
 
-    @Read
+    @Read(type =Location::class)
     fun read(httpRequest : HttpServletRequest, @IdParam internalId: IdType): Location? {
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null)
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null,"Location")
         return if (resource is Location) resource else null
     }
 
-    @Search
+    @Search(type =Location::class)
     fun search(
         httpRequest : HttpServletRequest,
         @OptionalParam(name = Location.SP_NAME) name : StringParam?,
@@ -36,15 +33,11 @@ class LocationProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor) : IRe
         @OptionalParam(name = Location.SP_PARTOF)  partOf : StringParam?,
         @OptionalParam(name = Location.SP_TYPE) type : TokenParam?,
         @OptionalParam(name = "near") near : TokenParam?
-    ): List<Location> {
-        val locations = mutableListOf<Location>()
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString)
+    ): Bundle? {
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString,"Location")
         if (resource != null && resource is Bundle) {
-            for (entry in resource.entry) {
-                if (entry.hasResource() && entry.resource is Location) locations.add(entry.resource as Location)
-            }
+            return resource
         }
-
-        return locations
+        return null
     }
 }

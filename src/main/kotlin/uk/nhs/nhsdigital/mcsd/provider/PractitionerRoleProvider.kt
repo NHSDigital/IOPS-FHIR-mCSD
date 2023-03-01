@@ -15,33 +15,28 @@ import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class PractitionerRoleProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor) : IResourceProvider {
-    override fun getResourceType(): Class<PractitionerRole> {
-        return PractitionerRole::class.java
-    }
+class PractitionerRoleProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor)  {
 
-    @Read
+
+    @Read(type=PractitionerRole::class)
     fun read(httpRequest : HttpServletRequest, @IdParam internalId: IdType): PractitionerRole? {
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null)
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null,"PractitionerRole")
         return if (resource is PractitionerRole) resource else null
     }
 
-    @Search
+    @Search(type=PractitionerRole::class)
     fun search(
         httpRequest : HttpServletRequest,
         @OptionalParam(name = PractitionerRole.SP_PRACTITIONER) practitioner:  TokenParam?,
         @OptionalParam(name = PractitionerRole.SP_ORGANIZATION) organisation:  TokenParam?,
         @OptionalParam(name = PractitionerRole.SP_IDENTIFIER)  identifier :TokenParam?,
         @OptionalParam(name = PractitionerRole.SP_RES_ID)  resid : StringParam?
-    ): List<PractitionerRole> {
-        val practitionerRoles = mutableListOf<PractitionerRole>()
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString)
-        if (resource != null && resource is Bundle) {
-            for (entry in resource.entry) {
-                if (entry.hasResource() && entry.resource is PractitionerRole) practitionerRoles.add(entry.resource as PractitionerRole)
-            }
-        }
+    ): Bundle? {
 
-        return practitionerRoles
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString,"PractitionerRole")
+        if (resource != null && resource is Bundle) {
+           return resource
+        }
+        return null
     }
 }

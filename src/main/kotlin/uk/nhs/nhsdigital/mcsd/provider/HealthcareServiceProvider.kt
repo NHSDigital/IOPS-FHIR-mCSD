@@ -13,18 +13,16 @@ import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class HealthcareServiceProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor) : IResourceProvider {
-    override fun getResourceType(): Class<HealthcareService> {
-        return HealthcareService::class.java
-    }
+class HealthcareServiceProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor)  {
 
-    @Read
+
+    @Read(type=HealthcareService::class)
     fun read(httpRequest : HttpServletRequest, @IdParam internalId: IdType): HealthcareService? {
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null)
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null,"HealthcareService")
         return if (resource is HealthcareService) resource else null
     }
 
-    @Search
+    @Search(type = HealthcareService::class)
     fun search(
         httpRequest : HttpServletRequest,
         @OptionalParam(name = HealthcareService.SP_NAME) name : StringParam?,
@@ -34,15 +32,13 @@ class HealthcareServiceProvider(var cognitoAuthInterceptor: CognitoAuthIntercept
         @OptionalParam(name = HealthcareService.SP_LOCATION) location : TokenParam?,
         @OptionalParam(name = HealthcareService.SP_ORGANIZATION) organization : TokenParam?,
         @OptionalParam(name = HealthcareService.SP_SERVICE_TYPE) type : TokenParam?
-    ): List<HealthcareService> {
+    ): Bundle? {
         val healthcareServices = mutableListOf<HealthcareService>()
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString)
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString,"HealthcareService")
         if (resource != null && resource is Bundle) {
-            for (entry in resource.entry) {
-                if (entry.hasResource() && entry.resource is HealthcareService) healthcareServices.add(entry.resource as HealthcareService)
-            }
+            return resource
         }
 
-        return healthcareServices
+        return null
     }
 }

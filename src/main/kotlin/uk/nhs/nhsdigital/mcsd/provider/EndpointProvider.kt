@@ -15,33 +15,28 @@ import uk.nhs.nhsdigital.mcsd.interceptor.CognitoAuthInterceptor
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class EndpointProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor) : IResourceProvider {
-    override fun getResourceType(): Class<Endpoint> {
-        return Endpoint::class.java
-    }
+class EndpointProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor)  {
 
-    @Read
+
+    @Read(type=Endpoint::class)
     fun read(httpRequest : HttpServletRequest, @IdParam internalId: IdType): Endpoint? {
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null)
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, null,"Endpoint")
         return if (resource is Endpoint) resource else null
     }
 
-    @Search
+    @Search(type=Endpoint::class)
     fun search(
         httpRequest : HttpServletRequest,
         @OptionalParam(name = Endpoint.SP_ORGANIZATION) organization : TokenParam?,
         @OptionalParam(name = Endpoint.SP_STATUS) status : StringParam?,
         @OptionalParam(name = Endpoint.SP_IDENTIFIER)  identifier :TokenParam?,
         @OptionalParam(name = Endpoint.SP_RES_ID)  resid : StringParam?
-    ): List<Endpoint> {
-        val endpoints = mutableListOf<Endpoint>()
-        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString)
-        if (resource != null && resource is Bundle) {
-            for (entry in resource.entry) {
-                if (entry.hasResource() && entry.resource is Endpoint) endpoints.add(entry.resource as Endpoint)
-            }
-        }
+    ): Bundle? {
 
-        return endpoints
+        val resource: Resource? = cognitoAuthInterceptor.readFromUrl(httpRequest.pathInfo, httpRequest.queryString,"Endpoint")
+        if (resource != null && resource is Bundle) {
+            return resource
+        }
+        return null
     }
 }

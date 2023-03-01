@@ -25,7 +25,6 @@ class FHIRR4RestfulServer(
     val locationProvider: LocationProvider,
     val endpointProvider: EndpointProvider,
 
-    val careTeamProvider: CareTeamProvider
 
 
 
@@ -43,7 +42,6 @@ class FHIRR4RestfulServer(
         registerProvider(healthcareServiceProvider)
         registerProvider(endpointProvider)
         registerProvider(locationProvider)
-        registerProvider(careTeamProvider)
 
 
         val awsAuditEventLoggingInterceptor =
