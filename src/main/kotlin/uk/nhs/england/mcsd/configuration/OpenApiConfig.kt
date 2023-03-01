@@ -27,6 +27,7 @@ import uk.nhs.england.mcsd.util.FHIRExamples
 @Configuration
 open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
     var MCSD = "Care Services Directory"
+    var APIM = "Security and API Management"
   //
 
 
@@ -65,27 +66,13 @@ open class OpenApiConfig(@Qualifier("R4") val ctx : FhirContext) {
                 + " [IHE mCSD ITI-90](https://profiles.ihe.net/ITI/mCSD/ITI-90.html)")
         )
 
-        // Dynamic Care Team Management
-/*
-        oas.addTagsItem(
-            io.swagger.v3.oas.models.tags.Tag()
-                .name(DCTM + " - Update Patient Care Team")
-                .description("[HL7 FHIR Administration Module](https://www.hl7.org/fhir/R4/administration-module.html) \n"
-                        + " [IHE DCTM PCC-45](https://www.ihe.net/uploadedFiles/Documents/PCC/IHE_PCC_Suppl_DCTM.pdf)")
-        )
-        oas.addTagsItem(
-            io.swagger.v3.oas.models.tags.Tag()
-                .name(DCTM + " - Search for Patient Care Team")
-                .description("[HL7 FHIR Administration Module](https://www.hl7.org/fhir/R4/administration-module.html) \n"
-                        + " [IHE DCTM PCC-46](https://www.ihe.net/uploadedFiles/Documents/PCC/IHE_PCC_Suppl_DCTM.pdf)")
-        )
-        oas.addTagsItem(
-            io.swagger.v3.oas.models.tags.Tag()
-                .name(DCTM + " - Retrieve Patient Care Team")
-                .description("[HL7 FHIR Administration Module](https://www.hl7.org/fhir/R4/administration-module.html) \n"
-                        + " [IHE DCTM PCC-47](https://www.ihe.net/uploadedFiles/Documents/PCC/IHE_PCC_Suppl_DCTM.pdf)")
-        )
-*/
+        oas.path("/FHIR/R4/metadata",PathItem()
+            .get(
+                Operation()
+                    .addTagsItem(APIM)
+                    .summary("server-capabilities: Fetch the server FHIR CapabilityStatement").responses(getApiResponses())))
+
+
         // Endpoint
         var endpointItem = PathItem()
             .get(
