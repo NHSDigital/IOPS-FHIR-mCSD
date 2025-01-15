@@ -9,9 +9,9 @@ import uk.nhs.england.mcsd.configuration.FHIRServerProperties
 
 @SpringBootApplication
 @ServletComponentScan
-@EnableConfigurationProperties(uk.nhs.england.mcsd.configuration.FHIRServerProperties::class)
+@EnableConfigurationProperties(FHIRServerProperties::class)
 open class FHIRFacade
 
 fun main(args: Array<String>) {
-    runApplication<uk.nhs.england.mcsd.FHIRFacade>(*args)
+    runApplication<FHIRFacade>(*args)
 }

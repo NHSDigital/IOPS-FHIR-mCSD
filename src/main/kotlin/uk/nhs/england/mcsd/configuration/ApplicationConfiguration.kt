@@ -4,15 +4,11 @@ import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.parser.StrictErrorHandler
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import uk.nhs.england.mcsd.interceptor.CognitoAuthInterceptor
-import uk.nhs.england.mcsd.util.CorsFilter
-import javax.servlet.Filter
+
 
 @Configuration
 open class ApplicationConfiguration {
@@ -37,17 +33,4 @@ open class ApplicationConfiguration {
         return client
     }
 
-    @Bean
-    fun corsFilter(): FilterRegistrationBean<*>? {
-        val source = UrlBasedCorsConfigurationSource()
-        val config = CorsConfiguration()
-        config.allowCredentials = true
-        config.addAllowedOrigin("*")
-        config.addAllowedHeader("*")
-        config.addAllowedMethod("*")
-        source.registerCorsConfiguration("/**", config)
-        val bean: FilterRegistrationBean<*> = FilterRegistrationBean<Filter>(CorsFilter())
-        bean.order = 0
-        return bean
-    }
 }

@@ -1,11 +1,9 @@
 
-mvn clean install
+### AWS ECR
 
-docker build -t fhir-mcsd .
+This isn't working 
 
-docker tag fhir-mcsd:latest 365027538941.dkr.ecr.eu-west-2.amazonaws.com/fhir-mcsd:latest
-docker tag fhir-mcsd:latest 365027538941.dkr.ecr.eu-west-2.amazonaws.com/fhir-mcsd:1.1.0
+`aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 365027538941.dkr.ecr.eu-west-2.amazonaws.com`
 
-docker push 365027538941.dkr.ecr.eu-west-2.amazonaws.com/fhir-mcsd:latest
+`mvn clean install -P dockerBuild,awsRelease`
 
-docker push 365027538941.dkr.ecr.eu-west-2.amazonaws.com/fhir-mcsd:1.1.0

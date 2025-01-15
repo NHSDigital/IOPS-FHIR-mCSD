@@ -12,7 +12,7 @@ import ca.uhn.fhir.rest.server.IResourceProvider
 import org.hl7.fhir.r4.model.*
 import org.springframework.stereotype.Component
 import uk.nhs.england.mcsd.interceptor.CognitoAuthInterceptor
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 @Component
 class OrganizationProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor)  {

@@ -3,12 +3,13 @@ package uk.nhs.england.mcsd
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.rest.api.EncodingEnum
 import ca.uhn.fhir.rest.server.RestfulServer
+import jakarta.servlet.annotation.WebServlet
 import org.springframework.beans.factory.annotation.Qualifier
 import uk.nhs.england.mcsd.interceptor.AWSAuditEventLoggingInterceptor
 import uk.nhs.england.mcsd.interceptor.CapabilityStatementInterceptor
 import uk.nhs.england.mcsd.provider.*
 import java.util.*
-import javax.servlet.annotation.WebServlet
+
 
 @WebServlet("/FHIR/R4/*", loadOnStartup = 1, displayName = "FHIR Facade")
 class FHIRR4RestfulServer(

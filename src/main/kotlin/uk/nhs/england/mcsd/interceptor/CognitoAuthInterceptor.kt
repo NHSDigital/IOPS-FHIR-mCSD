@@ -14,8 +14,8 @@ import com.amazonaws.services.cognitoidp.model.AuthenticationResultType
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult
 import org.apache.commons.io.IOUtils
-import org.hl7.fhir.dstu3.model.OperationOutcome
 import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.OperationOutcome
 import org.hl7.fhir.r4.model.Resource
 import org.springframework.stereotype.Component
 import uk.nhs.england.mcsd.configuration.FHIRServerProperties
@@ -28,7 +28,7 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 
 @Component

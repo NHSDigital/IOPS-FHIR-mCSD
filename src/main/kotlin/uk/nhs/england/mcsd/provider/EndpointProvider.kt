@@ -4,15 +4,13 @@ import ca.uhn.fhir.rest.annotation.IdParam
 import ca.uhn.fhir.rest.annotation.OptionalParam
 import ca.uhn.fhir.rest.annotation.Read
 import ca.uhn.fhir.rest.annotation.Search
-import ca.uhn.fhir.rest.param.DateRangeParam
-import ca.uhn.fhir.rest.param.ReferenceParam
 import ca.uhn.fhir.rest.param.StringParam
 import ca.uhn.fhir.rest.param.TokenParam
-import ca.uhn.fhir.rest.server.IResourceProvider
+import jakarta.servlet.http.HttpServletRequest
 import org.hl7.fhir.r4.model.*
 import org.springframework.stereotype.Component
 import uk.nhs.england.mcsd.interceptor.CognitoAuthInterceptor
-import javax.servlet.http.HttpServletRequest
+
 
 @Component
 class EndpointProvider(var cognitoAuthInterceptor: CognitoAuthInterceptor)  {

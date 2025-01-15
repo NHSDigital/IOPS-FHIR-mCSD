@@ -1,86 +1,85 @@
-package uk.nhs.england.mcsd.util;
+package uk.nhs.england.mcsd.util
 
-import java.math.BigInteger;
-import java.util.UUID;
+import java.math.BigInteger
+import java.util.*
 
-public final class FhirSystems {
-    public static final String EMIS_PRACTITIONER =  "https://emis.com/Id/Practitioner/GUID";
+object FhirSystems {
+    const val EMIS_PRACTITIONER: String = "https://emis.com/Id/Practitioner/GUID"
 
-    public static final String EXTENSION_LOCATION_TYPE = "http://fhir.virtuallyhealthcare.co.uk/LocationType";
+    const val EXTENSION_LOCATION_TYPE: String = "http://fhir.virtuallyhealthcare.co.uk/LocationType"
 
-    public static final String EXTENSION_LOCATION = "http://fhir.virtuallyhealthcare.co.uk/Location";
+    const val EXTENSION_LOCATION: String = "http://fhir.virtuallyhealthcare.co.uk/Location"
 
-    public static final String NHS_GMP_NUMBER = "https://fhir.hl7.org.uk/Id/gmp-number";
+    const val NHS_GMP_NUMBER: String = "https://fhir.hl7.org.uk/Id/gmp-number"
 
-    public static final String NHS_GMC_NUMBER = "https://fhir.hl7.org.uk/Id/gmc-number";
+    const val NHS_GMC_NUMBER: String = "https://fhir.hl7.org.uk/Id/gmc-number"
 
-    public static final String NHS_NUMBER = "https://fhir.nhs.uk/Id/nhs-number";
+    const val NHS_NUMBER: String = "https://fhir.nhs.uk/Id/nhs-number"
 
-    public static final String ODS_CODE = "https://fhir.nhs.uk/Id/ods-organization-code";
+    const val ODS_CODE: String = "https://fhir.nhs.uk/Id/ods-organization-code"
 
-    public static final String ODS_SITE_CODE ="https://fhir.nhs.uk/Id/ods-site-code";
+    const val ODS_SITE_CODE: String = "https://fhir.nhs.uk/Id/ods-site-code"
 
-    public static final String VIRTUALLY_CONNECTION_TYPE = "http://fhir.virtuallyhealthcare.co.uk/ConnectionType";
+    const val VIRTUALLY_CONNECTION_TYPE: String = "http://fhir.virtuallyhealthcare.co.uk/ConnectionType"
 
-    public static final String AWS_LOCATION_IDENTIFIER = "https://fhir.virtually.healthcare/Id/Location";
+    const val AWS_LOCATION_IDENTIFIER: String = "https://fhir.virtually.healthcare/Id/Location"
 
-    public static final String AWS_TASK_IDENTIFIER = "https://fhir.virtually.healthcare/Id/Task";
+    const val AWS_TASK_IDENTIFIER: String = "https://fhir.virtually.healthcare/Id/Task"
 
-    public static final String EMIS_PATIENT_IDENTIFIER = "https://emis.com/Id/Patient/DBID";
-    public static final String EMIS_PATIENT_ODS_IDENTIFIER = "https://emis.com/Id/Patient/ID";
+    const val EMIS_PATIENT_IDENTIFIER: String = "https://emis.com/Id/Patient/DBID"
+    const val EMIS_PATIENT_ODS_IDENTIFIER: String = "https://emis.com/Id/Patient/ID"
 
-    public static final String EMIS_PRACTITIONER_IDENTIFIER = "https://emis.com/Id/Practitioner/DBID";
+    const val EMIS_PRACTITIONER_IDENTIFIER: String = "https://emis.com/Id/Practitioner/DBID"
 
-    public static final String SNOMED_CT = "http://snomed.info/sct";
+    const val SNOMED_CT: String = "http://snomed.info/sct"
 
-    public static final String DMandD= "https://dmd.nhs.uk";
+    const val DMandD: String = "https://dmd.nhs.uk"
 
-    public static final String ISO_EHR_EVENTS = "http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle";
+    const val ISO_EHR_EVENTS: String = "http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle"
 
-    public static final String FHIR_RESOURCE_TYPE = "http://hl7.org/fhir/resource-types";
+    const val FHIR_RESOURCE_TYPE: String = "http://hl7.org/fhir/resource-types"
 
-    public static final String DICOM_AUDIT_ROLES = "http://dicom.nema.org/resources/ontology/DCM";
+    const val DICOM_AUDIT_ROLES: String = "http://dicom.nema.org/resources/ontology/DCM"
 
-    public static final String V3_ROLE_CLASS = "http://terminology.hl7.org/CodeSystem/v3-RoleClass";
+    const val V3_ROLE_CLASS: String = "http://terminology.hl7.org/CodeSystem/v3-RoleClass"
 
-    public static final String V3_PARTICIPANT_TYPE = "http://terminology.hl7.org/CodeSystem/v3-ParticipationType";
+    const val V3_PARTICIPANT_TYPE: String = "http://terminology.hl7.org/CodeSystem/v3-ParticipationType"
 
-    public static final String stripBrace(String str) {
-        return str.replace("{","").replace("}","");
+    fun stripBrace(str: String): String {
+        return str.replace("{", "").replace("}", "")
     }
 
-    public static final String cachedQuery(String host, String path, String query) {
-        if (path == null) path = "root";
-        if (query== null) query = "";
-        return host + "/" + path + "?" + query;}
-
-
-
-
-    public static String getId(String reference) {
-        String[] strings = reference.split("/");
-        return strings[strings.length - 1];
+    fun cachedQuery(host: String, path: String?, query: String?): String {
+        var path = path
+        var query = query
+        if (path == null) path = "root"
+        if (query == null) query = ""
+        return "$host/$path?$query"
     }
 
-    public static boolean isNumeric(String reference) {
-        String id = getId(reference);
+
+    fun getId(reference: String): String {
+        val strings = reference.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        return strings[strings.size - 1]
+    }
+
+    fun isNumeric(reference: String): Boolean {
+        val id = getId(reference)
         try {
-            BigInteger.valueOf(Long.valueOf(id));
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-    public static boolean isUUID(String reference) {
-        String id = getId(reference);
-        try {
-            UUID uuid = UUID.fromString(id);
-            return true;
-        } catch (Exception ex) {
-            return false;
+            BigInteger.valueOf(id.toLong())
+            return true
+        } catch (ex: Exception) {
+            return false
         }
     }
 
-
-
+    fun isUUID(reference: String): Boolean {
+        val id = getId(reference)
+        try {
+            val uuid = UUID.fromString(id)
+            return true
+        } catch (ex: Exception) {
+            return false
+        }
+    }
 }
