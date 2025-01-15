@@ -16,7 +16,7 @@ fhir:
   server:
     name: Care Directories
     baseUrl: https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/caredirectories
-    version: 3.2.6
+    version: 3.2.7
 
 ###Remote terminology validation:
 

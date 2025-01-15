@@ -10,7 +10,7 @@
     </parent>
     <groupId>uk.nhs.england</groupId>
     <artifactId>iops-fhir-mscd</artifactId>
-    <version>3.2.6</version>
+    <version>3.2.7</version>
     <name>iops-fhir-mcsd</name>
     <description>IOPS FHIR mCSD</description>
 
