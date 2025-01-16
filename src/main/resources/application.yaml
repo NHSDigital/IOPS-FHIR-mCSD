@@ -15,7 +15,7 @@ management:
 fhir:
   server:
     name: Care Directory Services
-    baseUrl: https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/caredirectories
+    baseUrl: https://uz0xlsaixi.execute-api.eu-west-2.amazonaws.com
     version: 7.6.0
 
 ###Remote terminology validation:
