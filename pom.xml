@@ -10,7 +10,7 @@
     </parent>
     <groupId>uk.nhs.england</groupId>
     <artifactId>iops-fhir-mscd</artifactId>
-    <version>3.2.7</version>
+    <version>7.6.0</version>
     <name>iops-fhir-mcsd</name>
     <description>IOPS FHIR mCSD</description>
 
@@ -341,7 +341,6 @@
     <profiles>
         <profile>
             <id>dockerBuild</id>
-
             <build>
                 <plugins>
                     <plugin>
@@ -396,63 +395,6 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-        </profile>
-        <!-- docker Image push and release profile -->
-        <profile>
-            <id>dockerRelease</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <phase>install</phase>
-                                <inherited>false</inherited>
-                                <configuration>
-                                    <target>
-                                        <exec executable="docker">
-                                            <arg value="tag"/>
-                                            <arg value="fhir-mcsd:${project.version}"/>
-                                            <arg value="fhir-mcsd:latest"/>
-                                        </exec>
-                                        <exec executable="docker">
-                                            <arg value="tag"/>
-                                            <arg value="fhir-mcsd:${project.version}"/>
-                                            <arg value="thorlogic/fhir-mcsd:latest"/>
-                                        </exec>
-                                        <exec executable="docker">
-                                            <arg value="tag"/>
-                                            <arg value="fhir-mcsd:${project.version}"/>
-                                            <arg value="thorlogic/fhir-mcsd:${project.version}"/>
-                                        </exec>
-                                        <exec executable="docker">
-                                            <arg value="push"/>
-                                            <arg value="fhir-mcsd:latest"/>
-                                        </exec>
-                                        <exec executable="docker">
-                                            <arg value="push"/>
-                                            <arg value="fhir-mcsd:${project.version}"/>
-                                        </exec>
-                                        <exec executable="docker">
-                                            <arg value="push"/>
-                                            <arg value="thorlogic/fhir-mcsd:${project.version}"/>
-                                        </exec>
-                                        <exec executable="docker">
-                                            <arg value="push"/>
-                                            <arg value="thorlogic/fhir-mcsd:latest"/>
-                                        </exec>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>awsRelease</id>
